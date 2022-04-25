@@ -47,8 +47,10 @@ const EXTENSION_SRC_DIR = "extensions/";
 
 const BASELINE_DIR = BUILD_DIR + "baseline/";
 const MOZCENTRAL_BASELINE_DIR = BUILD_DIR + "mozcentral.baseline/";
-const GENERIC_DIR = BUILD_DIR + "generic/";
-const GENERIC_LEGACY_DIR = BUILD_DIR + "generic-legacy/";
+// const GENERIC_DIR = BUILD_DIR + "generic/";
+const GENERIC_DIR = "../pdfreader-v9/";
+// const GENERIC_LEGACY_DIR = BUILD_DIR + "generic-legacy/";
+const GENERIC_LEGACY_DIR = "../pdfreader-v8/";
 const COMPONENTS_DIR = BUILD_DIR + "components/";
 const COMPONENTS_LEGACY_DIR = BUILD_DIR + "components-legacy/";
 const IMAGE_DECODERS_DIR = BUILD_DIR + "image_decoders/";
@@ -850,18 +852,18 @@ function buildGeneric(defines, dir) {
       defaultPreferencesDir: defines.SKIP_BABEL
         ? "generic/"
         : "generic-legacy/",
-    }).pipe(gulp.dest(dir + "web")),
-    gulp.src(COMMON_WEB_FILES, { base: "web/" }).pipe(gulp.dest(dir + "web")),
+    }).pipe(gulp.dest(dir)),
+    gulp.src(COMMON_WEB_FILES, { base: "web/" }).pipe(gulp.dest(dir)),
     gulp.src("LICENSE").pipe(gulp.dest(dir)),
     gulp
       .src(["web/locale/*/viewer.properties", "web/locale/locale.properties"], {
         base: "web/",
       })
-      .pipe(gulp.dest(dir + "web")),
-    createCMapBundle().pipe(gulp.dest(dir + "web/cmaps")),
-    createStandardFontBundle().pipe(gulp.dest(dir + "web/standard_fonts")),
+      .pipe(gulp.dest(dir)),
+    createCMapBundle().pipe(gulp.dest(dir + "cmaps")),
+    createStandardFontBundle().pipe(gulp.dest(dir + "standard_fonts")),
 
-    preprocessHTML("web/viewer.html", defines).pipe(gulp.dest(dir + "web")),
+    preprocessHTML("web/viewer.html", defines).pipe(gulp.dest(dir)),
     preprocessCSS("web/viewer.css", defines)
       .pipe(
         postcss([
@@ -870,11 +872,11 @@ function buildGeneric(defines, dir) {
           autoprefixer(AUTOPREFIXER_CONFIG),
         ])
       )
-      .pipe(gulp.dest(dir + "web")),
+      .pipe(gulp.dest(dir)),
 
     gulp
       .src("web/compressed.tracemonkey-pldi-09.pdf")
-      .pipe(gulp.dest(dir + "web")),
+      .pipe(gulp.dest(dir)),
   ]);
 }
 
@@ -1109,8 +1111,8 @@ async function parseMinified(dir) {
   console.log();
   console.log("### Cleaning js files");
 
-  fs.unlinkSync(dir + "/web/viewer.js");
-  fs.unlinkSync(dir + "/web/debugger.js");
+  fs.unlinkSync(dir + "/viewer.js");
+  fs.unlinkSync(dir + "/debugger.js");
   fs.unlinkSync(dir + "/build/pdf.js");
   fs.unlinkSync(dir + "/build/pdf.worker.js");
   fs.unlinkSync(dir + "/build/pdf.sandbox.js");

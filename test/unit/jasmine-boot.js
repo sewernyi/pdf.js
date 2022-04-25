@@ -114,7 +114,7 @@ async function initializePDFJS(callback) {
   });
 
   // Configure the worker.
-  GlobalWorkerOptions.workerSrc = "../../build/generic/build/pdf.worker.js";
+  GlobalWorkerOptions.workerSrc = "../generic/build/pdf.worker.js";
 
   callback();
 }
