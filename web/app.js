@@ -1864,7 +1864,7 @@ const PDFViewerApplication = {
     eventBus._on("pagemode", webViewerPageMode);
     eventBus._on("namedaction", webViewerNamedAction);
     eventBus._on("presentationmodechanged", webViewerPresentationModeChanged);
-    eventBus._on("presentationmode", webViewerPresentationMode);
+    // eventBus._on("presentationmode", webViewerPresentationMode);
     eventBus._on("print", webViewerPrint);
     eventBus._on("download", webViewerDownload);
     eventBus._on("save", webViewerSave);
