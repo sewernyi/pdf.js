@@ -65,7 +65,7 @@ class SecondaryToolbar {
       //   eventName: "presentationmode",
       //   close: true,
       // },
-      // { element: options.openFileButton, eventName: "openfile", close: true },
+      //{ element: options.openFileButton, eventName: "openfile", close: true },
       { element: options.printButton, eventName: "print", close: true },
       { element: options.downloadButton, eventName: "download", close: true },
       // { element: options.viewBookmarkButton, eventName: null, close: true },
@@ -245,10 +245,10 @@ class SecondaryToolbar {
     spreadEvenButton,
   }) {
     const scrollModeChanged = ({ mode }) => {
-      const isPage = mode === ScrollMode.PAGE,
-        isVertical = mode === ScrollMode.VERTICAL,
-        isHorizontal = mode === ScrollMode.HORIZONTAL,
-        isWrapped = mode === ScrollMode.WRAPPED;
+      // const isPage = mode === ScrollMode.PAGE,
+      const  isVertical = mode === ScrollMode.VERTICAL,
+        isHorizontal = mode === ScrollMode.HORIZONTAL;
+        // isWrapped = mode === ScrollMode.WRAPPED;
 
       // scrollPageButton.classList.toggle("toggled", isPage);
       scrollVerticalButton.classList.toggle("toggled", isVertical);

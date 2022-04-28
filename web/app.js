@@ -65,7 +65,7 @@ import { PDFFindController } from "./pdf_find_controller.js";
 import { PDFHistory } from "./pdf_history.js";
 import { PDFLayerViewer } from "./pdf_layer_viewer.js";
 import { PDFOutlineViewer } from "./pdf_outline_viewer.js";
-import { PDFPresentationMode } from "./pdf_presentation_mode.js";
+// import { PDFPresentationMode } from "./pdf_presentation_mode.js";
 import { PDFRenderingQueue } from "./pdf_rendering_queue.js";
 import { PDFScriptingManager } from "./pdf_scripting_manager.js";
 import { PDFSidebar } from "./pdf_sidebar.js";
@@ -200,7 +200,7 @@ const PDFViewerApplication = {
   /** @type {PDFRenderingQueue} */
   pdfRenderingQueue: null,
   /** @type {PDFPresentationMode} */
-  pdfPresentationMode: null,
+  // pdfPresentationMode: null,
   /** @type {PDFDocumentProperties} */
   pdfDocumentProperties: null,
   /** @type {PDFLinkService} */
@@ -1834,9 +1834,9 @@ const PDFViewerApplication = {
     // in the 'rotationchanging' event handler.
   },
 
-  requestPresentationMode() {
-    this.pdfPresentationMode?.request();
-  },
+  // requestPresentationMode() {
+  //   this.pdfPresentationMode?.request();
+  // },
 
   triggerPrinting() {
     if (!this.supportsPrinting) {
@@ -2449,9 +2449,9 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
   };
 }
 
-function webViewerPresentationMode() {
-  PDFViewerApplication.requestPresentationMode();
-}
+// function webViewerPresentationMode() {
+//   PDFViewerApplication.requestPresentationMode();
+// }
 function webViewerPrint() {
   PDFViewerApplication.triggerPrinting();
 }
@@ -2820,10 +2820,10 @@ function webViewerKeyDown(evt) {
   // CTRL+ALT or Option+Command
   if (cmd === 3 || cmd === 10) {
     switch (evt.keyCode) {
-      case 80: // p
-        PDFViewerApplication.requestPresentationMode();
-        handled = true;
-        break;
+      // case 80: // p
+      //   PDFViewerApplication.requestPresentationMode();
+      //   handled = true;
+      //   break;
       case 71: // g
         // focuses input#pageNumber field
         PDFViewerApplication.appConfig.toolbar.pageNumber.select();
