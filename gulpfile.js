@@ -874,9 +874,9 @@ function buildGeneric(defines, dir) {
       )
       .pipe(gulp.dest(dir)),
 
-    gulp
-      .src("web/compressed.tracemonkey-pldi-09.pdf")
-      .pipe(gulp.dest(dir)),
+    // gulp
+    //   .src("web/compressed.tracemonkey-pldi-09.pdf")
+    //   .pipe(gulp.dest(dir)),
   ]);
 }
 
