@@ -566,7 +566,7 @@ class Catalog {
       for (const [key, value] of obj.getAll()) {
         const dest = fetchDestination(value);
         if (dest) {
-          dests[key] = dest;
+          dests[stringToPDFString(key)] = dest;
         }
       }
     } else if (obj instanceof Dict) {
@@ -954,7 +954,7 @@ class Catalog {
         if (!xfaImages) {
           xfaImages = new Dict(this.xref);
         }
-        xfaImages.set(key, value);
+        xfaImages.set(stringToPDFString(key), value);
       }
     }
     return shadow(this, "xfaImages", xfaImages);
@@ -988,7 +988,7 @@ class Catalog {
     if (obj instanceof Dict && obj.has("JavaScript")) {
       const nameTree = new NameTree(obj.getRaw("JavaScript"), this.xref);
       for (const [key, value] of nameTree.getAll()) {
-        appendIfJavaScriptDict(key, value);
+        appendIfJavaScriptDict(stringToPDFString(key), value);
       }
     }
     // Append OpenAction "JavaScript" actions, if any, to the JavaScript map.
@@ -1387,6 +1387,22 @@ class Catalog {
     return next(pageRef);
   }
 
+  get baseUrl() {
+    const uri = this._catDict.get("URI");
+    if (uri instanceof Dict) {
+      const base = uri.get("Base");
+      if (typeof base === "string") {
+        const absoluteUrl = createValidAbsoluteUrl(base, null, {
+          tryConvertEncoding: true,
+        });
+        if (absoluteUrl) {
+          return shadow(this, "baseUrl", absoluteUrl.href);
+        }
+      }
+    }
+    return shadow(this, "baseUrl", null);
+  }
+
   /**
    * @typedef {Object} ParseDestDictionaryParameters
    * @property {Dict} destDict - The dictionary containing the destination.
@@ -1464,8 +1480,6 @@ class Catalog {
             // Some bad PDFs do not put parentheses around relative URLs.
             url = "/" + url.name;
           }
-          // TODO: pdf spec mentions urls can be relative to a Base
-          // entry in the dictionary.
           break;
 
         case "GoTo":

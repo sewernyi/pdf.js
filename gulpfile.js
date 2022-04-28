@@ -66,7 +66,10 @@ const DIST_DIR = BUILD_DIR + "dist/";
 const TYPES_DIR = BUILD_DIR + "types/";
 const TMP_DIR = BUILD_DIR + "tmp/";
 const TYPESTEST_DIR = BUILD_DIR + "typestest/";
-const COMMON_WEB_FILES = ["web/images/*.{png,svg,gif}", "web/debugger.js"];
+const COMMON_WEB_FILES = [
+  "web/images/*.{png,svg,gif}",
+  "web/debugger.{css,js}",
+];
 const MOZCENTRAL_DIFF_FILE = "mozcentral.diff";
 
 const REPO = "git@github.com:mozilla/pdf.js.git";
@@ -201,14 +204,10 @@ function createWebpackConfig(
     !disableSourceMaps;
   const skipBabel = bundleDefines.SKIP_BABEL;
 
-  // `core-js` (see https://github.com/zloirock/core-js/issues/514),
-  // `web-streams-polyfill` (already using a transpiled file), and
+  // `core-js` (see https://github.com/zloirock/core-js/issues/514), and
   // `src/core/{glyphlist,unicode}.js` (Babel is too slow for those when
   // source-maps are enabled) should be excluded from processing.
-  const babelExcludes = [
-    "node_modules[\\\\\\/]core-js",
-    "node_modules[\\\\\\/]web-streams-polyfill",
-  ];
+  const babelExcludes = ["node_modules[\\\\\\/]core-js"];
   if (enableSourceMaps) {
     babelExcludes.push("src[\\\\\\/]core[\\\\\\/](glyphlist|unicode)");
   }
@@ -1242,6 +1241,11 @@ gulp.task(
           MOZCENTRAL_DIR + "browser/locales/en-US/pdfviewer/",
         FIREFOX_CONTENT_DIR = EXTENSION_SRC_DIR + "/firefox/content/";
 
+      const MOZCENTRAL_WEB_FILES = [
+        ...COMMON_WEB_FILES,
+        "!web/images/toolbarButton-openFile.svg",
+      ];
+
       // Clear out everything in the firefox extension build directory
       rimraf.sync(MOZCENTRAL_DIR);
 
@@ -1266,7 +1270,7 @@ gulp.task(
           gulp.dest(MOZCENTRAL_CONTENT_DIR + "web")
         ),
         gulp
-          .src(COMMON_WEB_FILES, { base: "web/" })
+          .src(MOZCENTRAL_WEB_FILES, { base: "web/" })
           .pipe(gulp.dest(MOZCENTRAL_CONTENT_DIR + "web")),
         createCMapBundle().pipe(
           gulp.dest(MOZCENTRAL_CONTENT_DIR + "web/cmaps")
@@ -2105,7 +2109,7 @@ function packageBowerJson() {
     license: DIST_LICENSE,
     dependencies: {
       dommatrix: "^0.0.24",
-      "web-streams-polyfill": "^3.2.0",
+      "web-streams-polyfill": "^3.2.1",
     },
     peerDependencies: {
       "worker-loader": "^3.0.8", // Used in `external/dist/webpack.js`.

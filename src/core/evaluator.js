@@ -170,6 +170,16 @@ function normalizeBlendMode(value, parsingArray = false) {
   return "source-over";
 }
 
+function incrementCachedImageMaskCount(data) {
+  if (
+    data.fn === OPS.paintImageMaskXObject &&
+    data.args[0] &&
+    data.args[0].count > 0
+  ) {
+    data.args[0].count++;
+  }
+}
+
 // Trying to minimize Date.now() usage and check every 100 time.
 class TimeSlotManager {
   static get TIME_SLOT_DURATION_MS() {
@@ -592,12 +602,8 @@ class PartialEvaluator {
         resources
       );
     }
-    if (optionalContent !== undefined) {
-      operatorList.addOp(OPS.beginMarkedContentProps, ["OC", optionalContent]);
-    }
 
     const imageMask = dict.get("IM", "ImageMask") || false;
-    const interpolate = dict.get("I", "Interpolate");
     let imgData, args;
     if (imageMask) {
       // This depends on a tmpCanvas being filled with the
@@ -605,6 +611,7 @@ class PartialEvaluator {
       // data can't be done here. Instead of creating a
       // complete PDFImage, only read the information needed
       // for later.
+      const interpolate = dict.get("I", "Interpolate");
       const bitStrideLength = (w + 7) >> 3;
       const imgArray = image.getBytes(
         bitStrideLength * h,
@@ -625,16 +632,18 @@ class PartialEvaluator {
         imgData.cached = !!cacheKey;
         args = [imgData];
 
-        operatorList.addOp(OPS.paintImageMaskXObject, args);
+        operatorList.addImageOps(
+          OPS.paintImageMaskXObject,
+          args,
+          optionalContent
+        );
+
         if (cacheKey) {
           localImageCache.set(cacheKey, imageRef, {
             fn: OPS.paintImageMaskXObject,
             args,
+            optionalContent,
           });
-        }
-
-        if (optionalContent !== undefined) {
-          operatorList.addOp(OPS.endMarkedContent, []);
         }
         return;
       }
@@ -651,16 +660,18 @@ class PartialEvaluator {
       if (imgData.isSingleOpaquePixel) {
         // Handles special case of mainly LaTeX documents which use image
         // masks to draw lines with the current fill style.
-        operatorList.addOp(OPS.paintSolidColorImageMask, []);
+        operatorList.addImageOps(
+          OPS.paintSolidColorImageMask,
+          [],
+          optionalContent
+        );
+
         if (cacheKey) {
           localImageCache.set(cacheKey, imageRef, {
             fn: OPS.paintSolidColorImageMask,
             args: [],
+            optionalContent,
           });
-        }
-
-        if (optionalContent !== undefined) {
-          operatorList.addOp(OPS.endMarkedContent, []);
         }
         return;
       }
@@ -678,17 +689,18 @@ class PartialEvaluator {
           count: 1,
         },
       ];
+      operatorList.addImageOps(
+        OPS.paintImageMaskXObject,
+        args,
+        optionalContent
+      );
 
-      operatorList.addOp(OPS.paintImageMaskXObject, args);
       if (cacheKey) {
         localImageCache.set(cacheKey, imageRef, {
           fn: OPS.paintImageMaskXObject,
           args,
+          optionalContent,
         });
-      }
-
-      if (optionalContent !== undefined) {
-        operatorList.addOp(OPS.endMarkedContent, []);
       }
       return;
     }
@@ -710,11 +722,11 @@ class PartialEvaluator {
       // We force the use of RGBA_32BPP images here, because we can't handle
       // any other kind.
       imgData = imageObj.createImageData(/* forceRGBA = */ true);
-      operatorList.addOp(OPS.paintInlineImageXObject, [imgData]);
-
-      if (optionalContent !== undefined) {
-        operatorList.addOp(OPS.endMarkedContent, []);
-      }
+      operatorList.addImageOps(
+        OPS.paintInlineImageXObject,
+        [imgData],
+        optionalContent
+      );
       return;
     }
 
@@ -762,11 +774,13 @@ class PartialEvaluator {
         return this._sendImgData(objId, /* imgData = */ null, cacheGlobally);
       });
 
-    operatorList.addOp(OPS.paintImageXObject, args);
+    operatorList.addImageOps(OPS.paintImageXObject, args, optionalContent);
+
     if (cacheKey) {
       localImageCache.set(cacheKey, imageRef, {
         fn: OPS.paintImageXObject,
         args,
+        optionalContent,
       });
 
       if (imageRef) {
@@ -778,14 +792,11 @@ class PartialEvaluator {
             objId,
             fn: OPS.paintImageXObject,
             args,
+            optionalContent,
             byteSize: 0, // Temporary entry, note `addByteSize` above.
           });
         }
       }
-    }
-
-    if (optionalContent !== undefined) {
-      operatorList.addOp(OPS.endMarkedContent, []);
     }
   }
 
@@ -1700,14 +1711,13 @@ class PartialEvaluator {
             if (isValidName) {
               const localImage = localImageCache.getByName(name);
               if (localImage) {
-                operatorList.addOp(localImage.fn, localImage.args);
-                if (
-                  localImage.fn === OPS.paintImageMaskXObject &&
-                  localImage.args[0] &&
-                  localImage.args[0].count > 0
-                ) {
-                  localImage.args[0].count++;
-                }
+                operatorList.addImageOps(
+                  localImage.fn,
+                  localImage.args,
+                  localImage.optionalContent
+                );
+
+                incrementCachedImageMaskCount(localImage);
                 args = null;
                 continue;
               }
@@ -1723,14 +1733,13 @@ class PartialEvaluator {
                 if (xobj instanceof Ref) {
                   const localImage = localImageCache.getByRef(xobj);
                   if (localImage) {
-                    operatorList.addOp(localImage.fn, localImage.args);
-                    if (
-                      localImage.fn === OPS.paintImageMaskXObject &&
-                      localImage.args[0] &&
-                      localImage.args[0].count > 0
-                    ) {
-                      localImage.args[0].count++;
-                    }
+                    operatorList.addImageOps(
+                      localImage.fn,
+                      localImage.args,
+                      localImage.optionalContent
+                    );
+
+                    incrementCachedImageMaskCount(localImage);
                     resolveXObject();
                     return;
                   }
@@ -1741,7 +1750,11 @@ class PartialEvaluator {
                   );
                   if (globalImage) {
                     operatorList.addDependency(globalImage.objId);
-                    operatorList.addOp(globalImage.fn, globalImage.args);
+                    operatorList.addImageOps(
+                      globalImage.fn,
+                      globalImage.args,
+                      globalImage.optionalContent
+                    );
 
                     resolveXObject();
                     return;
@@ -1846,14 +1859,13 @@ class PartialEvaluator {
             if (cacheKey) {
               const localImage = localImageCache.getByName(cacheKey);
               if (localImage) {
-                operatorList.addOp(localImage.fn, localImage.args);
-                if (
-                  localImage.fn === OPS.paintImageMaskXObject &&
-                  localImage.args[0] &&
-                  localImage.args[0].count > 0
-                ) {
-                  localImage.args[0].count++;
-                }
+                operatorList.addImageOps(
+                  localImage.fn,
+                  localImage.args,
+                  localImage.optionalContent
+                );
+
+                incrementCachedImageMaskCount(localImage);
                 args = null;
                 continue;
               }
@@ -3405,7 +3417,12 @@ class PartialEvaluator {
       } else if (encoding instanceof Name) {
         baseEncodingName = encoding.name;
       } else {
-        throw new FormatError("Encoding is not a Name nor a Dict");
+        const msg = "Encoding is not a Name nor a Dict";
+
+        if (!this.options.ignoreErrors) {
+          throw new FormatError(msg);
+        }
+        warn(msg);
       }
       // According to table 114 if the encoding is a named encoding it must be
       // one of these predefined encodings.
