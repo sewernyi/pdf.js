@@ -62,14 +62,14 @@ class Toolbar {
       { element: options.next, eventName: "nextpage" },
       { element: options.zoomIn, eventName: "zoomin" },
       { element: options.zoomOut, eventName: "zoomout" },
-      { element: options.openFile, eventName: "openfile" },
+      // { element: options.openFile, eventName: "openfile" },
       { element: options.print, eventName: "print" },
-      {
-        element: options.presentationModeButton,
-        eventName: "presentationmode",
-      },
+      // {
+      //   element: options.presentationModeButton,
+      //   eventName: "presentationmode",
+      // },
       { element: options.download, eventName: "download" },
-      { element: options.viewBookmark, eventName: null },
+      // { element: options.viewBookmark, eventName: null },
     ];
     this.items = {
       numPages: options.numPages,

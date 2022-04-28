@@ -88,11 +88,11 @@ function getViewerConfiguration() {
       zoomIn: document.getElementById("zoomIn"),
       zoomOut: document.getElementById("zoomOut"),
       viewFind: document.getElementById("viewFind"),
-      openFile: document.getElementById("openFile"),
+      // openFile: document.getElementById("openFile"),
       print: document.getElementById("print"),
-      presentationModeButton: document.getElementById("presentationMode"),
+      // presentationModeButton: document.getElementById("presentationMode"),
       download: document.getElementById("download"),
-      viewBookmark: document.getElementById("viewBookmark"),
+      // viewBookmark: document.getElementById("viewBookmark"),
     },
     secondaryToolbar: {
       toolbar: document.getElementById("secondaryToolbar"),
@@ -100,23 +100,23 @@ function getViewerConfiguration() {
       toolbarButtonContainer: document.getElementById(
         "secondaryToolbarButtonContainer"
       ),
-      presentationModeButton: document.getElementById(
-        "secondaryPresentationMode"
-      ),
-      openFileButton: document.getElementById("secondaryOpenFile"),
+      // presentationModeButton: document.getElementById(
+      //   "secondaryPresentationMode"
+      // ),
+      // openFileButton: document.getElementById("secondaryOpenFile"),
       printButton: document.getElementById("secondaryPrint"),
       downloadButton: document.getElementById("secondaryDownload"),
-      viewBookmarkButton: document.getElementById("secondaryViewBookmark"),
+      // viewBookmarkButton: document.getElementById("secondaryViewBookmark"),
       firstPageButton: document.getElementById("firstPage"),
       lastPageButton: document.getElementById("lastPage"),
       pageRotateCwButton: document.getElementById("pageRotateCw"),
       pageRotateCcwButton: document.getElementById("pageRotateCcw"),
       cursorSelectToolButton: document.getElementById("cursorSelectTool"),
       cursorHandToolButton: document.getElementById("cursorHandTool"),
-      scrollPageButton: document.getElementById("scrollPage"),
+      // scrollPageButton: document.getElementById("scrollPage"),
       scrollVerticalButton: document.getElementById("scrollVertical"),
       scrollHorizontalButton: document.getElementById("scrollHorizontal"),
-      scrollWrappedButton: document.getElementById("scrollWrapped"),
+      // scrollWrappedButton: document.getElementById("scrollWrapped"),
       spreadNoneButton: document.getElementById("spreadNone"),
       spreadOddButton: document.getElementById("spreadOdd"),
       spreadEvenButton: document.getElementById("spreadEven"),

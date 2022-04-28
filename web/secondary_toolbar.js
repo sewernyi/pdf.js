@@ -60,15 +60,15 @@ class SecondaryToolbar {
     this.toggleButton = options.toggleButton;
     this.toolbarButtonContainer = options.toolbarButtonContainer;
     this.buttons = [
-      {
-        element: options.presentationModeButton,
-        eventName: "presentationmode",
-        close: true,
-      },
-      { element: options.openFileButton, eventName: "openfile", close: true },
+      // {
+      //   element: options.presentationModeButton,
+      //   eventName: "presentationmode",
+      //   close: true,
+      // },
+      // { element: options.openFileButton, eventName: "openfile", close: true },
       { element: options.printButton, eventName: "print", close: true },
       { element: options.downloadButton, eventName: "download", close: true },
-      { element: options.viewBookmarkButton, eventName: null, close: true },
+      // { element: options.viewBookmarkButton, eventName: null, close: true },
       { element: options.firstPageButton, eventName: "firstpage", close: true },
       { element: options.lastPageButton, eventName: "lastpage", close: true },
       {
@@ -93,12 +93,12 @@ class SecondaryToolbar {
         eventDetails: { tool: CursorTool.HAND },
         close: true,
       },
-      {
-        element: options.scrollPageButton,
-        eventName: "switchscrollmode",
-        eventDetails: { mode: ScrollMode.PAGE },
-        close: true,
-      },
+      // {
+      //   element: options.scrollPageButton,
+      //   eventName: "switchscrollmode",
+      //   eventDetails: { mode: ScrollMode.PAGE },
+      //   close: true,
+      // },
       {
         element: options.scrollVerticalButton,
         eventName: "switchscrollmode",
@@ -111,12 +111,12 @@ class SecondaryToolbar {
         eventDetails: { mode: ScrollMode.HORIZONTAL },
         close: true,
       },
-      {
-        element: options.scrollWrappedButton,
-        eventName: "switchscrollmode",
-        eventDetails: { mode: ScrollMode.WRAPPED },
-        close: true,
-      },
+      // {
+      //   element: options.scrollWrappedButton,
+      //   eventName: "switchscrollmode",
+      //   eventDetails: { mode: ScrollMode.WRAPPED },
+      //   close: true,
+      // },
       {
         element: options.spreadNoneButton,
         eventName: "switchspreadmode",
@@ -250,24 +250,24 @@ class SecondaryToolbar {
         isHorizontal = mode === ScrollMode.HORIZONTAL,
         isWrapped = mode === ScrollMode.WRAPPED;
 
-      scrollPageButton.classList.toggle("toggled", isPage);
+      // scrollPageButton.classList.toggle("toggled", isPage);
       scrollVerticalButton.classList.toggle("toggled", isVertical);
       scrollHorizontalButton.classList.toggle("toggled", isHorizontal);
-      scrollWrappedButton.classList.toggle("toggled", isWrapped);
+      // scrollWrappedButton.classList.toggle("toggled", isWrapped);
 
-      scrollPageButton.setAttribute("aria-checked", isPage);
+      // scrollPageButton.setAttribute("aria-checked", isPage);
       scrollVerticalButton.setAttribute("aria-checked", isVertical);
       scrollHorizontalButton.setAttribute("aria-checked", isHorizontal);
-      scrollWrappedButton.setAttribute("aria-checked", isWrapped);
+      // scrollWrappedButton.setAttribute("aria-checked", isWrapped);
 
       // Permanently *disable* the Scroll buttons when PAGE-scrolling is being
       // enforced for *very* long/large documents; please see the `BaseViewer`.
       const forceScrollModePage =
         this.pagesCount > PagesCountLimit.FORCE_SCROLL_MODE_PAGE;
-      scrollPageButton.disabled = forceScrollModePage;
+      // scrollPageButton.disabled = forceScrollModePage;
       scrollVerticalButton.disabled = forceScrollModePage;
       scrollHorizontalButton.disabled = forceScrollModePage;
-      scrollWrappedButton.disabled = forceScrollModePage;
+      // scrollWrappedButton.disabled = forceScrollModePage;
 
       // Temporarily *disable* the Spread buttons when horizontal scrolling is
       // enabled, since the non-default Spread modes doesn't affect the layout.

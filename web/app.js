@@ -569,13 +569,13 @@ const PDFViewerApplication = {
       eventBus
     );
 
-    if (this.supportsFullscreen) {
-      this.pdfPresentationMode = new PDFPresentationMode({
-        container,
-        pdfViewer: this.pdfViewer,
-        eventBus,
-      });
-    }
+    // if (this.supportsFullscreen) {
+    //   this.pdfPresentationMode = new PDFPresentationMode({
+    //     container,
+    //     pdfViewer: this.pdfViewer,
+    //     eventBus,
+    //   });
+    // }
 
     this.passwordPrompt = new PasswordPrompt(
       appConfig.passwordOverlay,
@@ -1856,7 +1856,7 @@ const PDFViewerApplication = {
     eventBus._on("beforeprint", _boundEvents.beforePrint);
     eventBus._on("afterprint", _boundEvents.afterPrint);
     eventBus._on("pagerendered", webViewerPageRendered);
-    eventBus._on("updateviewarea", webViewerUpdateViewarea);
+    // eventBus._on("updateviewarea", webViewerUpdateViewarea);
     eventBus._on("pagechanging", webViewerPageChanging);
     eventBus._on("scalechanging", webViewerScaleChanging);
     eventBus._on("rotationchanging", webViewerRotationChanging);
